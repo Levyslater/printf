@@ -2,7 +2,7 @@
 /**
  * get_flags - flags
  * @format: Format strings
- * @i: take a parameter.
+ * @b: take a parameter.
  * Return: Flags
  */
 int get_flags(const char *format, int *b)
