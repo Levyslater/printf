@@ -3,7 +3,7 @@
 /**
  * get_precision - precision
  * @format: Format string
- * @i: arrays
+ * @b: arrays
  * @list: list
  *
  * Return: Precision.
