@@ -1,8 +1,8 @@
 #include "main.h"
 /**
- * get_size - get size
+ * get_size - determine printing size
  * @format: Format string
- * @b:type 
+ * @b:type
  *
  * Return: Precision.
  */

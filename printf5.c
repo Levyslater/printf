@@ -1,7 +1,7 @@
 #include "main.h"
 
 /**
- * get_precision - precision
+ * get_precision - determine printing precision
  * @format: Format string
  * @b: arrays
  * @list: list

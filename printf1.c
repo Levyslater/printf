@@ -1,24 +1,5 @@
 #include "main.h"
 
-/************************* PRINT CHAR *************************/
-
-/**
- * print_char - we have to print a char
- * @types: there are the list a of arguments
- * @buffer: Buffer
- * @flags:   flags
- * @width: Width
- * @precision: Precision
- * @size: the Size
- * Return: total chars printed
- */
-int print_char(va_list types, char buffer[],
-	int flags, int width, int precision, int size)
-{
-	char c = va_arg(types, int);
-
-	return (handle_write_char(c, buffer, flags, width, precision, size));
-}
 /************************* PRINT A STRING *************************/
 /**
  * print_string -we have to prints a string
@@ -74,6 +55,51 @@ int print_string(va_list types, char buffer[],
 
 	return (write(1, str, length));
 }
+/************************* PRINT BINARY *************************/
+/**
+ * print_binary - Prints binary
+ * @types: types
+ * @buffer: Buffer
+ * @flags: flags
+ * @width: width.
+ * @precision: Precision
+ * @size: Size
+ * Return: total char printed.
+ */
+int print_binary(va_list types, char buffer[],
+	int flags, int width, int precision, int size)
+{
+	unsigned int c, a, b, sum;
+	unsigned int d[32];
+	int count;
+
+	UNUSED(buffer);
+	UNUSED(flags);
+	UNUSED(width);
+	UNUSED(precision);
+	UNUSED(size);
+
+	c = va_arg(types, unsigned int);
+	a = 2147483648; /* (2 ^ 31) */
+	d[0] = c / a;
+	for (b = 1; b < 32; b++)
+	{
+		a /= 2;
+		d[b] = (c / a) % 2;
+	}
+	for (b = 0, sum = 0, count = 0; b < 32; b++)
+	{
+		sum += d[b];
+		if (sum || b == 31)
+		{
+			char x = '0' + d[b];
+
+			write(1, &x, 1);
+			count++;
+		}
+	}
+	return (count);
+}
 /************************* PRINT PERCENT SIGN *************************/
 /**
  * print_percent - Prints a percent sign
@@ -96,7 +122,25 @@ int print_percent(va_list types, char buffer[],
 	UNUSED(size);
 	return (write(1, "%%", 1));
 }
+/************************* PRINT CHAR *************************/
 
+/**
+ * print_char - we have to print a char
+ * @types: there are the list a of arguments
+ * @buffer: Buffer
+ * @flags:   flags
+ * @width: Width
+ * @precision: Precision
+ * @size: the Size
+ * Return: total chars printed
+ */
+int print_char(va_list types, char buffer[],
+	int flags, int width, int precision, int size)
+{
+	char c = va_arg(types, int);
+
+	return (handle_write_char(c, buffer, flags, width, precision, size));
+}
 /************************* PRINT INT *************************/
 /**
  * print_int - Print int
@@ -139,50 +183,4 @@ int print_int(va_list types, char buffer[],
 	b++;
 
 	return (write_number(is_negative, b, buffer, flags, width, precision, size));
-}
-
-/************************* PRINT BINARY *************************/
-/**
- * print_binary - Prints binary
- * @types: types
- * @buffer: Buffer
- * @flags: flags
- * @width: width.
- * @precision: Precision
- * @size: Size
- * Return: total char printed.
- */
-int print_binary(va_list types, char buffer[],
-	int flags, int width, int precision, int size)
-{
-	unsigned int c, a, b, sum;
-	unsigned int d[32];
-	int count;
-
-	UNUSED(buffer);
-	UNUSED(flags);
-	UNUSED(width);
-	UNUSED(precision);
-	UNUSED(size);
-
-	c = va_arg(types, unsigned int);
-	a = 2147483648; /* (2 ^ 31) */
-	d[0] = c / a;
-	for (b = 1; b < 32; b++)
-	{
-		a /= 2;
-		d[b] = (c / d) % 2;
-	}
-	for (b = 0, sum = 0, count = 0; b < 32; b++)
-	{
-		sum += d[b];
-		if (sum || b == 31)
-		{
-			char x = '0' + d[b];
-
-			write(1, &x, 1);
-			count++;
-		}
-	}
-	return (count);
 }

@@ -1,5 +1,56 @@
 #include "main.h"
 
+/************************* PRINT A STRING IN ROT13 *************************/
+/**
+ * print_rot13string - Print rot13 array of characters
+ * @types: types
+ * @buffer: Buffer
+ * @flags: flags
+ * @width: width
+ * @precision: Precision
+ * @size: Size
+ * Return: total chars printed
+ */
+int print_rot13string(va_list types, char buffer[],
+	int flags, int width, int precision, int size)
+{
+	char z;
+	char *str;
+	unsigned int b, k;
+	int count = 0;
+	char in[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+	char out[] = "NOPQRSTUVWXYZABCDEFGHIJKLMnopqrstuvwxyzabcdefghijklm";
+
+	str = va_arg(types, char *);
+	UNUSED(buffer);
+	UNUSED(flags);
+	UNUSED(width);
+	UNUSED(precision);
+	UNUSED(size);
+
+	if (str == NULL)
+		str = "(AHYY)";
+	for (b = 0; str[b]; b++)
+	{
+		for (k = 0; in[k]; k++)
+		{
+			if (in[k] == str[b])
+			{
+				z = out[k];
+				write(1, &z, 1);
+				count++;
+				break;
+			}
+		}
+		if (!in[k])
+		{
+			z = str[b];
+			write(1, &z, 1);
+			count++;
+		}
+	}
+	return (count);
+}
 /****************** PRINT POINTER ******************/
 /**
  * print_pointer - Prints pointer
@@ -51,47 +102,6 @@ int print_pointer(va_list types, char buffer[],
 	return (write_pointer(buffer, ind, length,
 		width, flags, padd, extra_c, padd_start));
 }
-
-/************************* PRINT NON PRINTABLE *************************/
-/**
- * print_non_printable - Prints non printable
- * @types: types
- * @buffer: Buffer
- * @flags: flags
- * @width: width
- * @precision: Precision
- * @size: Size
- * Return: all chars printed
- */
-int print_non_printable(va_list types, char buffer[],
-	int flags, int width, int precision, int size)
-{
-	int b = 0, offset = 0;
-	char *str = va_arg(types, char *);
-
-	UNUSED(flags);
-	UNUSED(width);
-	UNUSED(precision);
-	UNUSED(size);
-
-	if (str == NULL)
-		return (write(1, "(null)", 6));
-
-	while (str[b] != '\0')
-	{
-		if (is_printable(str[b]))
-			buffer[b + offset] = str[b];
-		else
-			offset += append_hexa_code(str[b], buffer, b + offset);
-
-		b++;
-	}
-
-	buffer[b + offset] = '\0';
-
-	return (write(1, buffer, b + offset));
-}
-
 /************************* PRINT REVERSE *************************/
 /**
  * print_reverse - Prints reverse
@@ -135,54 +145,42 @@ int print_reverse(va_list types, char buffer[],
 	}
 	return (count);
 }
-/************************* PRINT A STRING IN ROT13 *************************/
+/************************* PRINT NON PRINTABLE *************************/
 /**
- * print_rot13string - Print rot13 string
+ * print_non_printable - Prints non printable
  * @types: types
  * @buffer: Buffer
  * @flags: flags
  * @width: width
  * @precision: Precision
  * @size: Size
- * Return: total chars printed
+ * Return: all chars printed
  */
-int print_rot13string(va_list types, char buffer[],
+int print_non_printable(va_list types, char buffer[],
 	int flags, int width, int precision, int size)
 {
-	char z;
-	char *str;
-	unsigned int b, k;
-	int count = 0;
-	char in[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-	char out[] = "NOPQRSTUVWXYZABCDEFGHIJKLMnopqrstuvwxyzabcdefghijklm";
+	int b = 0, offset = 0;
+	char *str = va_arg(types, char *);
 
-	str = va_arg(types, char *);
-	UNUSED(buffer);
 	UNUSED(flags);
 	UNUSED(width);
 	UNUSED(precision);
 	UNUSED(size);
 
 	if (str == NULL)
-		str = "(AHYY)";
-	for (b = 0; str[b]; b++)
+		return (write(1, "(null)", 6));
+
+	while (str[b] != '\0')
 	{
-		for (k = 0; in[k]; k++)
-		{
-			if (in[k] == str[b])
-			{
-				z = out[k];
-				write(1, &z, 1);
-				count++;
-				break;
-			}
-		}
-		if (!in[k])
-		{
-			z = str[b];
-			write(1, &z, 1);
-			count++;
-		}
+		if (is_printable(str[b]))
+			buffer[b + offset] = str[b];
+		else
+			offset += append_hexa_code(str[b], buffer, b + offset);
+
+		b++;
 	}
-	return (count);
+
+	buffer[b + offset] = '\0';
+
+	return (write(1, buffer, b + offset));
 }
